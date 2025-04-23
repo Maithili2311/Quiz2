@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IQ Quiz Challenge</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    padding-top: 70px;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.container {
+    width: 90%;
+    max-width: 1000px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-top: 2rem;
+}
+
+.quiz-intro {
+    text-align: center;
+}
+
+.intro-content h1 {
+    color: #1a2a6c;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.features {
+    display: flex;
+    justify-content: space-around;
+    margin: 3rem 0;
+    flex-wrap: wrap;
+    gap: 2rem;
+}
+
+.feature {
+    flex: 1;
+    min-width: 200px;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-5px);
+}
+
+.feature i {
+    font-size: 2.5rem;
+    color: #1a2a6c;
+    margin-bottom: 1rem;
+}
+
+.feature h3 {
+    color: #1a2a6c;
+    margin-bottom: 0.5rem;
+}
+
+.start-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(45deg, #1a2a6c, #b21f1f);
+    color: white;
+    border: none;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 2rem auto;
+    width: fit-content;
+}
+
+.start-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.start-button i {
+    font-size: 1.2rem;
+}
+
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.timer-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.timer-container i {
+    color: #1a2a6c;
+}
+
+.progress-container {
+    flex: 1;
+    margin-left: 1rem;
+}
+
+#progress-bar {
+    height: 10px;
+    background: #f0f0f0;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+#progress-bar::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(45deg, #1a2a6c, #b21f1f);
+    transition: width 0.3s ease;
+}
+
+#question {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    color: #1a2a6c;
+}
+
+#options-container {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.option {
+    padding: 1.2rem;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.option:hover {
+    background: #f0f0f0;
+    border-color: #1a2a6c;
+    transform: translateX(5px);
+}
+
+.option.selected {
+    background: #1a2a6c;
+    color: white;
+    border-color: #1a2a6c;
+}
+
+#notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(45deg, #1a2a6c, #b21f1f);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.5s ease;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+#notification i {
+    font-size: 1.5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 1rem;
+    }
+
+    .features {
+        flex-direction: column;
+    }
+
+    .feature {
+        width: 100%;
+    }
+
+    .quiz-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .progress-container {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    #question {
+        font-size: 1.5rem;
+    }
+}
+
+.quiz-info {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.quiz-info h2 {
+    color: #1a2a6c;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.quiz-info p {
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.quiz-info ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.quiz-info ul li {
+    background: #f0f0f0;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.quiz-details {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.detail {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detail i {
+    color: #1a2a6c;
+    font-size: 1.2rem;
+}
+
+.leaderboard {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard h2 {
+    color: #1a2a6c;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.leaderboard-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+.leaderboard-item:hover {
+    transform: translateX(5px);
+}
+
+.rank {
+    width: 30px;
+    height: 30px;
+    background: #1a2a6c;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.score {
+    color: #1a2a6c;
+    font-weight: bold;
+}
+
+.testimonials {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.testimonials h2 {
+    color: #1a2a6c;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.testimonial-cards {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.testimonial {
+    flex: 1;
+    min-width: 250px;
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 10px;
+    position: relative;
+}
+
+.testimonial i {
+    color: #1a2a6c;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.testimonial p {
+    font-style: italic;
+    margin-bottom: 1rem;
+}
+
+.author {
+    color: #1a2a6c;
+    font-weight: 500;
+    text-align: right;
+}
+
+@media (max-width: 768px) {
+    .quiz-info ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .quiz-details {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .testimonial-cards {
+        flex-direction: column;
+    }
+
+    .testimonial {
+        width: 100%;
+    }
+}
+
+.navbar {
+    background: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 70px;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1a2a6c;
+}
+
+.nav-brand i {
+    font-size: 2rem;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.nav-links a:hover {
+    background: #f0f0f0;
+    color: #1a2a6c;
+}
+
+.nav-links a.active {
+    background: #1a2a6c;
+    color: white;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background: white;
+    min-width: 200px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 0.5rem 0;
+    z-index: 1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.dropdown-content a:hover {
+    background: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem;
+    }
+
+    .nav-brand span {
+        display: none;
+    }
+
+    .nav-links {
+        gap: 1rem;
+    }
+
+    .nav-links a span {
+        display: none;
+    }
+
+    .dropdown-content {
+        min-width: 150px;
+    }
+}
+
+.login-section {
+    position: relative;
+}
+
+.login-btn {
+    background: #1a2a6c;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.1rem;
+}
+
+.login-btn:hover {
+    background: #0f1a4a;
+    transform: translateY(-2px);
+}
+
+.login-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    min-width: 300px;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: 1rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group input {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #1a2a6c;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.forgot-password {
+    color: #1a2a6c;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.submit-btn {
+    background: #1a2a6c;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: #0f1a4a;
+}
+
+.signup-link {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+.signup-link a {
+    color: #1a2a6c;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .login-btn span {
+        display: none;
+    }
+
+    .login-dropdown {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        right: 0;
+        min-width: auto;
+        border-radius: 0;
+        margin-top: 0;
+    }
+} 
+</style>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-brain"></i>
+            <span>IQ Quiz</span>
+        </div>
+        <div class="nav-links">
+            <a href="https://maithili2311.github.io/Homepage2/" class="active"><i class="fas fa-home"></i> Home</a>
+            <div class="dropdown">
+                <a href="#"><i class="fas fa-ellipsis-h"></i> More</a>
+                <div class="dropdown-content">
+                    <a href="https://maithili2311.github.io/Quiz2/"><i class="fas fa-question-circle"></i> Quiz</a>
+                    <a href="#https://maithili2311.github.io/Formulas2/"><i class="fas fa-square-root-alt"></i> Formulas</a>
+                    <a href="https://maithili2311.github.io/FAQs2/"><i class="fas fa-question"></i> FAQs</a>
+                </div>
+            </div>
+            <a href="https://maithili2311.github.io/Homepage/">
+            <div class="login-section">
+                <button class="login-btn" id="loginBtn">
+                    <i class="fas fa-user"></i>
+                    <span>Logout</span>
+                </button>
+              </a>
+                <div class="login-dropdown hidden" id="loginDropdown">
+                    <form class="login-form">
+                      
+              
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="quiz-intro" id="intro-screen">
+            <div class="intro-content">
+                <h1>IQ Quiz Challenge</h1>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-brain"></i>
+                        <h3>25 Questions</h3>
+                        <p>Test your intelligence with challenging questions</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-clock"></i>
+                        <h3>Time Limit</h3>
+                        <p>30 seconds per question</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-trophy"></i>
+                        <h3>IQ Score</h3>
+                        <p>Get your IQ score after completing the quiz</p>
+                    </div>
+                </div>
+
+                <div class="quiz-info">
+                    <h2>About the Quiz</h2>
+                    <p>This comprehensive IQ test contains 25 challenging questions that will test your:</p>
+                    <ul>
+                        <li>Verbal Reasoning</li>
+                        <li>Numerical Ability</li>
+                        <li>Spatial Intelligence</li>
+                        <li>Pattern Recognition</li>
+                        <li>Logical Thinking</li>
+                    </ul>
+                    <div class="quiz-details">
+                        <div class="detail">
+                            <i class="fas fa-stopwatch"></i>
+                            <p>30 seconds per question</p>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-calculator"></i>
+                            <p>Real-time scoring</p>
+                        </div>
+                        <div class="detail">
+                            <i class="fas fa-chart-pie"></i>
+                            <p>Detailed performance analysis</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="leaderboard">
+                    <h2>Top Performers</h2>
+                    <div class="leaderboard-list">
+                        <div class="leaderboard-item">
+                            <span class="rank">1</span>
+                            <span class="name">John Doe</span>
+                            <span class="score">IQ 145</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="rank">2</span>
+                            <span class="name">Jane Smith</span>
+                            <span class="score">IQ 142</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="rank">3</span>
+                            <span class="name">Mike Johnson</span>
+                            <span class="score">IQ 138</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonials">
+                    <h2>What People Say</h2>
+                    <div class="testimonial-cards">
+                        <div class="testimonial">
+                            <i class="fas fa-quote-left"></i>
+                            <p>"The most accurate IQ test I've taken online. The questions are challenging and well-structured."</p>
+                            <div class="author">- Sarah Williams</div>
+                        </div>
+                        <div class="testimonial">
+                            <i class="fas fa-quote-left"></i>
+                            <p>"Great way to test your cognitive abilities. The time pressure adds an extra challenge!"</p>
+                            <div class="author">- David Brown</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="start-button" id="start-quiz">
+                    <i class="fas fa-play"></i>
+                    Start Quiz
+                </button>
+            </div>
+        </div>
+
+        <div id="quiz-container" class="hidden">
+            <div class="quiz-header">
+                <div class="timer-container">
+                    <i class="fas fa-clock"></i>
+                    <span id="timer">30s</span>
+                </div>
+                <div class="progress-container">
+                    <div id="progress-bar"></div>
+                    <p id="progress-text">Question <span id="current-question">1</span> of 25</p>
+                </div>
+            </div>
+            
+            <div id="question-container">
+                <h2 id="question">Question will appear here</h2>
+                <div id="options-container">
+                    <!-- Options will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+
+        <div id="notification" class="hidden">
+            <i class="fas fa-trophy"></i>
+            <p>Your IQ is <span id="iq-score">135</span></p>
+        </div>
+    </div>
+    <script>
+      const questions = [
+    {
+        question: "Complete the sequence: 2, 4, 8, 16, ?",
+        options: ["24", "32", "30", "28"],
+        correct: 1,
+        difficulty: 2
+    },
+    {
+        question: "Which word does not belong: Apple, Banana, Carrot, Orange",
+        options: ["Apple", "Banana", "Carrot", "Orange"],
+        correct: 2,
+        difficulty: 1
+    },
+    {
+        question: "If all Zorks are Yorks and all Yorks are Xorks, then:",
+        options: [
+            "All Zorks are Xorks",
+            "Some Zorks are not Xorks",
+            "No Zorks are Xorks",
+            "None of the above"
+        ],
+        correct: 0,
+        difficulty: 3
+    },
+    {
+        question: "What number should replace the question mark? 3, 6, 12, 24, ?",
+        options: ["36", "42", "48", "54"],
+        correct: 2,
+        difficulty: 2
+    },
+    {
+        question: "Which shape comes next in the pattern: △, □, ○, △, □, ?",
+        options: ["△", "□", "○", "☆"],
+        correct: 2,
+        difficulty: 1
+    },
+    {
+        question: "If RED = 27, BLUE = 35, then GREEN = ?",
+        options: ["42", "45", "48", "51"],
+        correct: 1,
+        difficulty: 3
+    },
+    {
+        question: "Complete the analogy: Book is to Reading as Fork is to:",
+        options: ["Eating", "Writing", "Sleeping", "Running"],
+        correct: 0,
+        difficulty: 1
+    },
+    {
+        question: "What is the missing number in the sequence: 1, 4, 9, 16, 25, ?",
+        options: ["36", "38", "40", "42"],
+        correct: 0,
+        difficulty: 2
+    },
+    {
+        question: "Which word is the odd one out: Circle, Square, Triangle, Rectangle",
+        options: ["Circle", "Square", "Triangle", "Rectangle"],
+        correct: 0,
+        difficulty: 1
+    },
+    {
+        question: "If A = 1, B = 2, C = 3, then what is D + E?",
+        options: ["7", "8", "9", "10"],
+        correct: 2,
+        difficulty: 2
+    },
+    {
+        question: "What comes next in the pattern: 1, 3, 6, 10, 15, ?",
+        options: ["20", "21", "22", "23"],
+        correct: 1,
+        difficulty: 3
+    },
+    {
+        question: "Which number is the odd one out: 2, 3, 5, 7, 9, 11",
+        options: ["2", "5", "9", "11"],
+        correct: 2,
+        difficulty: 2
+    },
+    {
+        question: "Complete the sequence: A, C, E, G, ?",
+        options: ["H", "I", "J", "K"],
+        correct: 1,
+        difficulty: 1
+    },
+    {
+        question: "If all Roses are Flowers and some Flowers are Red, then:",
+        options: [
+            "All Roses are Red",
+            "Some Roses are Red",
+            "No Roses are Red",
+            "Cannot be determined"
+        ],
+        correct: 1,
+        difficulty: 3
+    },
+    {
+        question: "What is the next number in the sequence: 1, 1, 2, 3, 5, 8, ?",
+        options: ["11", "12", "13", "14"],
+        correct: 2,
+        difficulty: 2
+    },
+    {
+        question: "Which shape has the most sides: Pentagon, Hexagon, Octagon, Decagon",
+        options: ["Pentagon", "Hexagon", "Octagon", "Decagon"],
+        correct: 3,
+        difficulty: 1
+    },
+    {
+        question: "If 3 cats catch 3 mice in 3 minutes, how many cats are needed to catch 100 mice in 100 minutes?",
+        options: ["3", "10", "33", "100"],
+        correct: 0,
+        difficulty: 3
+    },
+    {
+        question: "What is the missing number: 2, 5, 10, 17, 26, ?",
+        options: ["35", "37", "39", "41"],
+        correct: 1,
+        difficulty: 2
+    },
+    {
+        question: "Which word is different: Happy, Joyful, Sad, Delighted",
+        options: ["Happy", "Joyful", "Sad", "Delighted"],
+        correct: 2,
+        difficulty: 1
+    },
+    {
+        question: "Complete the sequence: 1, 4, 9, 16, 25, 36, ?",
+        options: ["49", "50", "51", "52"],
+        correct: 0,
+        difficulty: 2
+    },
+    {
+        question: "If all Birds can Fly and Penguins are Birds, then:",
+        options: [
+            "All Penguins can Fly",
+            "Some Penguins can Fly",
+            "No Penguins can Fly",
+            "Cannot be determined"
+        ],
+        correct: 2,
+        difficulty: 3
+    },
+    {
+        question: "What is the next number: 1, 2, 4, 7, 11, 16, ?",
+        options: ["20", "21", "22", "23"],
+        correct: 2,
+        difficulty: 2
+    },
+    {
+        question: "Which word is the odd one out: Spring, Summer, Autumn, Winter",
+        options: ["Spring", "Summer", "Autumn", "Winter"],
+        correct: 3,
+        difficulty: 1
+    },
+    {
+        question: "If 5 machines make 5 widgets in 5 minutes, how long would it take 100 machines to make 100 widgets?",
+        options: ["5 minutes", "10 minutes", "50 minutes", "100 minutes"],
+        correct: 0,
+        difficulty: 3
+    },
+    {
+        question: "What is the missing number: 1, 8, 27, 64, ?",
+        options: ["100", "125", "150", "175"],
+        correct: 1,
+        difficulty: 2
+    }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let timePerQuestion = 30;
+let timeLeft = timePerQuestion;
+let timer;
+
+const introScreen = document.getElementById('intro-screen');
+const quizContainer = document.getElementById('quiz-container');
+const startButton = document.getElementById('start-quiz');
+const questionElement = document.getElementById('question');
+const optionsContainer = document.getElementById('options-container');
+const progressBar = document.getElementById('progress-bar');
+const currentQuestionElement = document.getElementById('current-question');
+const notification = document.getElementById('notification');
+const timerElement = document.getElementById('timer');
+const iqScoreElement = document.getElementById('iq-score');
+
+// Start button event listener
+startButton.addEventListener('click', () => {
+    introScreen.classList.add('hidden');
+    quizContainer.classList.remove('hidden');
+    showQuestion();
+});
+
+function startTimer() {
+    timeLeft = timePerQuestion;
+    updateTimer();
+    timer = setInterval(() => {
+        timeLeft--;
+        updateTimer();
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            nextQuestion();
+        }
+    }, 1000);
+}
+
+function updateTimer() {
+    timerElement.textContent = `${timeLeft}s`;
+}
+
+function calculateIQScore() {
+    const baseIQ = 100;
+    const timeBonus = Math.max(0, (timePerQuestion - timeLeft) / timePerQuestion) * 10;
+    const difficultyBonus = questions[currentQuestion].difficulty * 5;
+    return Math.round(baseIQ + (score * 2) + timeBonus + difficultyBonus);
+}
+
+function showQuestion() {
+    const question = questions[currentQuestion];
+    questionElement.textContent = question.question;
+    
+    optionsContainer.innerHTML = '';
+    question.options.forEach((option, index) => {
+        const button = document.createElement('div');
+        button.className = 'option';
+        button.textContent = option;
+        button.addEventListener('click', () => selectOption(index));
+        optionsContainer.appendChild(button);
+    });
+
+    updateProgress();
+    startTimer();
+}
+
+function selectOption(index) {
+    clearInterval(timer);
+    const options = document.querySelectorAll('.option');
+    options.forEach(option => option.classList.remove('selected'));
+    options[index].classList.add('selected');
+
+    if (index === questions[currentQuestion].correct) {
+        score += questions[currentQuestion].difficulty;
+    }
+
+    setTimeout(nextQuestion, 1000);
+}
+
+function nextQuestion() {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+        showQuestion();
+        if (currentQuestion === 10) {
+            showIQNotification();
+        }
+    } else {
+        showFinalScore();
+    }
+}
+
+function updateProgress() {
+    const progress = (currentQuestion / questions.length) * 100;
+    progressBar.style.width = `${progress}%`;
+    currentQuestionElement.textContent = currentQuestion + 1;
+}
+
+function showIQNotification() {
+    const iqScore = calculateIQScore();
+    iqScoreElement.textContent = iqScore;
+    notification.classList.remove('hidden');
+    setTimeout(() => {
+        notification.classList.add('hidden');
+    }, 5000);
+}
+
+function showFinalScore() {
+    const finalScore = Math.round((score / questions.length) * 100);
+    const iqScore = calculateIQScore();
+    questionElement.textContent = `Quiz Completed! Your final score is ${finalScore}%`;
+    optionsContainer.innerHTML = `
+        <p>Your estimated IQ is ${iqScore}</p>
+        <p>Score breakdown:</p>
+        <ul>
+            <li>Correct answers: ${score} points</li>
+            <li>Time bonus: ${Math.round((timePerQuestion - timeLeft) / timePerQuestion * 10)} points</li>
+            <li>Difficulty bonus: ${questions[currentQuestion - 1].difficulty * 5} points</li>
+        </ul>
+    `;
+    progressBar.style.width = '100%';
+}
+
+// Login functionality
+const loginBtn = document.getElementById('loginBtn');
+const loginDropdown = document.getElementById('loginDropdown');
+const loginForm = document.querySelector('.login-form');
+
+loginBtn.addEventListener('click', () => {
+    loginDropdown.classList.toggle('hidden');
+});
+
+// Close login dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    if (!loginSection.contains(e.target)) {
+        loginDropdown.classList.add('hidden');
+    }
+});
+
+loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const remember = document.getElementById('remember').checked;
+
+    // Here you would typically send the login data to your server
+    console.log('Login attempt:', { username, password, remember });
+    
+    // For demo purposes, just show a success message
+    alert('Login successful!');
+    loginDropdown.classList.add('hidden');
+}); 
+    </script>
+</body>
+</html> 
